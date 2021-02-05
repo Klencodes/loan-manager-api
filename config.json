@@ -1,0 +1,13 @@
+{
+    "connectionString":"mongodb://localhost:27017/user-verify",
+    "secret": "THISISSECRET",
+    "emailFrom": "london.gutmann17@ethereal.email",
+    "smtpOptions": {
+        "host": "smtp.ethereal.email",
+        "port": 587,
+        "auth": {
+            "user": "london.gutmann17@ethereal.email",
+            "pass": "KjCB3bJRJX1XbwJwq1"
+        }
+    }
+}
