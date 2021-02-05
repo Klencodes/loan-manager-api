@@ -1,6 +1,6 @@
 {
     "connectionString":"mongodb://localhost:27017/user-verify",
-    "secret": "THISISSECRET",
+    "secret": "thisismysecretokay",
     "emailFrom": "london.gutmann17@ethereal.email",
     "smtpOptions": {
         "host": "smtp.ethereal.email",
