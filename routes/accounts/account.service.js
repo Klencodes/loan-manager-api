@@ -2,12 +2,12 @@ const config = require('config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
-const sendEmail = require('../_helpers/send-email');
-const db = require('../_helpers/db');
-const Role = require('../_helpers/role');
+const sendEmail = require('../../_helpers/send-email');
+const db = require('../../_helpers/db');
+const Role = require('../../_helpers/role');
 
 module.exports = {
-    authenticate,
+    login,
     refreshToken,
     revokeToken,
     register,
@@ -22,7 +22,7 @@ module.exports = {
     delete: _delete
 };
 
-async function authenticate({ email, password, ipAddress }) {
+async function login({ email, password, ipAddress }) {
     const account = await db.Account.findOne({ email });
 
     if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
@@ -205,6 +205,8 @@ async function _delete(id) {
     const account = await getAccount(id);
     await account.remove();
 }
+
+
 
 // helper functions
 

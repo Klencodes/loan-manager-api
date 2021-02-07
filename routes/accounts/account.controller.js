@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
-const validateRequest = require('../_middleware/validate-request');
-const authorize = require('../_middleware/authorize')
-const Role = require('../_helpers/role');
+const validateRequest = require('../../middleware/validate-request');
+const authorize = require('../../middleware/authorize')
+const Role = require('../../_helpers/role');
 const accountService = require('./account.service');
 
 // routes
-router.post('/authenticate', authenticateSchema, authenticate);
+router.post('/login', loginSchema, login);
 router.post('/refresh-token', refreshToken);
 router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken);
 router.post('/register', registerSchema, register);
@@ -23,7 +23,7 @@ router.delete('/:id', authorize(), _delete);
 
 module.exports = router;
 
-function authenticateSchema(req, res, next) {
+function loginSchema(req, res, next) {
     const schema = Joi.object({
         email: Joi.string().required(),
         password: Joi.string().required()
@@ -31,10 +31,10 @@ function authenticateSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 
-function authenticate(req, res, next) {
+function login(req, res, next) {
     const { email, password } = req.body;
     const ipAddress = req.ip;
-    accountService.authenticate({ email, password, ipAddress })
+    accountService.login({ email, password, ipAddress })
         .then(({ refreshToken, ...account }) => {
             setTokenCookie(res, refreshToken);
             res.json(account);
@@ -151,6 +151,7 @@ function resetPassword(req, res, next) {
 }
 
 function getAll(req, res, next) {
+    //only admin get all account
     accountService.getAll()
         .then(accounts => res.json(accounts))
         .catch(next);
