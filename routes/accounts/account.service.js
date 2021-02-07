@@ -281,7 +281,7 @@ async function sendAlreadyRegisteredEmail(email, origin) {
 
     await sendEmail({
         to: email,
-        subject: 'Sign-up Verification API - Email Already Registered',
+        subject: 'Sign-up Verification',
         html: `<h4>Email Already Registered</h4>
                <p>Your email <strong>${email}</strong> is already registered.</p>
                ${message}`

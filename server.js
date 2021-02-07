@@ -10,9 +10,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: '*',
+    origin: 'http://localhost:4200',
     methods: ['GET', 'PUT', 'DELETE', 'PATCH', 'POST'],
-    allowedHeaders: '*'
+    allowedHeaders: 'Content-Type, Authorization, XMLHttpRequest, Origin, X-Requested-With, Accept',
+    credentials: true
 }));
 
 // api routes
