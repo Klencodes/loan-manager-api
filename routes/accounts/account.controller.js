@@ -83,6 +83,14 @@ function registerSchema(req, res, next) {
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         email: Joi.string().email().required(),
+        phoneNumber: Joi.string().required(),
+        jobTitle: Joi.string().required(),
+        department: Joi.string().required(),
+        dob: Joi.date().required(),
+        address: Joi.string().required(),
+        city: Joi.string().required(), 
+        state: Joi.string().required(),
+        country: Joi.string().required(),
         password: Joi.string().min(6).required(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
         acceptTerms: Joi.boolean().valid(true).required()
@@ -153,7 +161,8 @@ function resetPassword(req, res, next) {
 function getAll(req, res, next) {
     //only admin get all account
     accountService.getAll()
-        .then(accounts => res.json(accounts))
+        .then(accounts => 
+            res.json({count: accounts.length,  message: 'Users returned successfully', accounts}))
         .catch(next);
 }
 
@@ -174,6 +183,14 @@ function createSchema(req, res, next) {
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         email: Joi.string().email().required(),
+        phoneNumber: Joi.string().required(),
+        jobTitle: Joi.string().required(),
+        department: Joi.string().required(),
+        dob: Joi.string().required(),
+        address: Joi.string().required(),
+        city: Joi.string().required(), 
+        state: Joi.string().required(),
+        country: Joi.string().required(),
         password: Joi.string().min(6).required(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
         role: Joi.string().valid(Role.Admin, Role.User).required()
@@ -193,6 +210,14 @@ function updateSchema(req, res, next) {
         firstName: Joi.string().empty(''),
         lastName: Joi.string().empty(''),
         email: Joi.string().email().empty(''),
+        phoneNumber: Joi.string().empty(''),
+        jobTitle: Joi.string().empty(''),
+        department: Joi.string().empty(''),
+        dob: Joi.string().empty(''),
+        address: Joi.string().empty(''), 
+        city: Joi.string().empty(''), 
+        state: Joi.string().empty(''), 
+        country: Joi.string().empty(''), 
         password: Joi.string().min(6).empty(''),
         confirmPassword: Joi.string().valid(Joi.ref('password')).empty('')
     };
