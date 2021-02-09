@@ -19,9 +19,6 @@ app.use(cors({
 // api routes
 app.use('/accounts', require('./routes/accounts/account.controller'));
 
-// swagger docs route
-app.use('/api-docs', require('./_helpers/swagger'));
-
 // global error handler
 app.use(errorHandler);
 
