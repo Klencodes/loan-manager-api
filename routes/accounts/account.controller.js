@@ -100,7 +100,7 @@ function registerSchema(req, res, next) {
 
 function register(req, res, next) {
     accountService.register(req.body, req.get('origin'))
-        .then(() => res.json({ message: 'Registration successful, please check your email for verification instructions' }))
+        .then(() => res.json({ status: 200, message: 'Registration successful, please check your email for verification instructions' }))
         .catch(next);
 }
 
@@ -113,7 +113,7 @@ function verifyEmailSchema(req, res, next) {
 
 function verifyEmail(req, res, next) {
     accountService.verifyEmail(req.body)
-        .then(() => res.json({ message: 'Verification successful, you can now login' }))
+        .then(() => res.json({ status: 200, message: 'Verification successful, you can now login' }))
         .catch(next);
 }
 
@@ -126,7 +126,7 @@ function forgotPasswordSchema(req, res, next) {
 
 function forgotPassword(req, res, next) {
     accountService.forgotPassword(req.body, req.get('origin'))
-        .then(() => res.json({ message: 'Please check your email for password reset instructions' }))
+        .then(() => res.json({ status: 200, message: 'Please check your email for password reset instructions' }))
         .catch(next);
 }
 
@@ -154,7 +154,7 @@ function resetPasswordSchema(req, res, next) {
 
 function resetPassword(req, res, next) {
     accountService.resetPassword(req.body)
-        .then(() => res.json({ message: 'Password reset successful, you can now login' }))
+        .then(() => res.json({status: 200, message: 'Password reset successful, you can now login' }))
         .catch(next);
 }
 
@@ -162,8 +162,9 @@ function getAll(req, res, next) {
     //only admin get all account
     accountService.getAll()
         .then(accounts => 
-            res.json({count: accounts.length,  message: 'Users returned successfully', accounts}))
+            res.json({ status: 200, count: accounts.length,  message: 'Users returned successfully', accounts}))
         .catch(next);
+       
 }
 
 function getById(req, res, next) {
@@ -200,7 +201,7 @@ function createSchema(req, res, next) {
 
 function create(req, res, next) {
     accountService.create(req.body)
-        .then(account => res.json(account))
+        .then(account => res.json({status: 200, message:'Account created successfully', account}))
         .catch(next);
 }
 
@@ -238,7 +239,7 @@ function update(req, res, next) {
     }
 
     accountService.update(req.params.id, req.body)
-        .then(account => res.json(account))
+        .then(account => res.json({status: 200, message:'Account updated successfully', account}))
         .catch(next);
 }
 
@@ -249,7 +250,7 @@ function _delete(req, res, next) {
     }
 
     accountService.delete(req.params.id)
-        .then(() => res.json({ message: 'Account deleted successfully' }))
+        .then(() => res.json({ status: 200, message: 'Account deleted successfully' }))
         .catch(next);
 }
 
