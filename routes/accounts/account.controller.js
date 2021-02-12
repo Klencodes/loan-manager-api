@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
-const validateRequest = require('../../middleware/validate-request');
 const authorize = require('../../middleware/authorize')
 const Role = require('../../_helpers/role');
 const accountService = require('./account.service');
@@ -16,6 +15,7 @@ router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
 router.get('/', authorize(Role.Admin), getAll);
+router.get('/users', usersOnly);
 router.get('/:id', authorize(), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
@@ -161,10 +161,16 @@ function resetPassword(req, res, next) {
 function getAll(req, res, next) {
     //only admin get all account
     accountService.getAll()
-        .then(accounts => 
+        .then((accounts) => 
             res.json({ status: 200, count: accounts.length,  message: 'Users returned successfully', accounts}))
         .catch(next);
-       
+    
+}
+function usersOnly(req, res, next) { 
+    accountService.usersOnly()
+        .then(users =>
+            res.json({status: 200, count: users.length, users})
+        .catch(next))
 }
 
 function getById(req, res, next) {
@@ -255,6 +261,21 @@ function _delete(req, res, next) {
 }
 
 // helper functions
+
+function validateRequest(req, next, schema) {
+    const options = {
+        abortEarly: false, // include all errors
+        allowUnknown: true, // ignore unknown props
+        stripUnknown: true // remove unknown props
+    };
+    const { error, value } = schema.validate(req.body, options);
+    if (error) {
+        next(`Validation error: ${error.details.map(x => x.message).join(', ')}`);
+    } else {
+        req.body = value;
+        next();
+    }
+}
 
 function setTokenCookie(res, token)
 {

@@ -16,6 +16,7 @@ module.exports = {
     validateResetToken,
     resetPassword,
     getAll,
+    usersOnly,
     getById,
     create,
     update,
@@ -154,7 +155,14 @@ async function resetPassword({ token, password }) {
 
 async function getAll() {
     const accounts = await db.Account.find();
-    return accounts.map(x => basicDetails(x));
+    return  accounts.map(x => basicDetails(x))
+
+}
+
+async function usersOnly() {
+    const users = await db.Account.find({'role':'User'});
+    if (!users) throw 'Account not found';
+    return users;
 }
 
 async function getById(id) {
