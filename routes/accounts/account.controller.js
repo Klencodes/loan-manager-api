@@ -93,7 +93,7 @@ function registerSchema(req, res, next) {
         country: Joi.string().required(),
         password: Joi.string().min(6).required(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
-        acceptTerms: Joi.boolean().valid(true).required()
+        acceptTerms: Joi.boolean().required(),
     });
     validateRequest(req, next, schema);
 }
@@ -248,7 +248,7 @@ function _delete(req, res, next) {
     if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
-
+ 
     accountService.delete(req.params.id)
         .then(() => res.json({ status: 200, message: 'Account deleted successfully' }))
         .catch(next);

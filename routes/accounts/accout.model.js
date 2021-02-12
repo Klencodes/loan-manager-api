@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     email: { type: String, unique: true, required: true },
     passwordHash: { type: String, required: true },
-    phoneNumber: { type: String },
+    phoneNumber:  { type: String, required: true },
     title: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -22,7 +22,7 @@ const schema = new Schema({
     resetToken: { token: String, expires: Date },
     passwordReset: Date,
     created: { type: Date, default: Date.now },
-    updated: Date
+    updated: Date,    
 });
 
 schema.virtual('isVerified').get(function () {
