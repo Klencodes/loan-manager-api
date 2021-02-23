@@ -15,7 +15,7 @@ router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
 router.get('/', authorize(Role.Admin), getAll);
-router.get('/users', usersOnly);
+router.get('/users', authorize(Role.Admin), usersOnly);
 router.get('/:id', authorize(), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
@@ -166,12 +166,6 @@ function getAll(req, res, next) {
         .catch(next);
     
 }
-function usersOnly(req, res, next) { 
-    accountService.usersOnly()
-        .then(users =>
-            res.json({status: 200, count: users.length, users})
-        .catch(next))
-}
 
 function getById(req, res, next) {
     // users can get their own account and admins can get any account
@@ -181,6 +175,23 @@ function getById(req, res, next) {
 
     accountService.getById(req.params.id)
         .then(account => account ? res.json(account) : res.sendStatus(404))
+        .catch(next);
+}
+
+function usersOnly(req, res, next) { 
+    accountService.usersOnly()
+        .then(users =>
+            res.json({status: 200, count: users.length, users})
+        .catch(next))
+}
+
+function _delete(req, res, next) {
+    // users can delete their own account and admins can delete any account
+    if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    } 
+    accountService.delete(req.params.id)
+        .then(() => res.json({ status: 200, message: 'Account deleted successfully' }))
         .catch(next);
 }
 
@@ -206,6 +217,7 @@ function createSchema(req, res, next) {
 }
 
 function create(req, res, next) {
+    // only admins can create any account
     accountService.create(req.body)
         .then(account => res.json({status: 200, message:'Account created successfully', account}))
         .catch(next);
@@ -246,17 +258,6 @@ function update(req, res, next) {
 
     accountService.update(req.params.id, req.body)
         .then(account => res.json({status: 200, message:'Account updated successfully', account}))
-        .catch(next);
-}
-
-function _delete(req, res, next) {
-    // users can delete their own account and admins can delete any account
-    if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
- 
-    accountService.delete(req.params.id)
-        .then(() => res.json({ status: 200, message: 'Account deleted successfully' }))
         .catch(next);
 }
 

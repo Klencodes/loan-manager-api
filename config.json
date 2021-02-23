@@ -1,7 +1,7 @@
 {
-    "connectionString":"mongodb://localhost:27017/user-verify",
+    "connectionString":"mongodb://localhost:27017/User-Accounts",
     "secret": "asdfjklgh46321226641fsdklafjasdkljfsklfjd7148924065",
-    "emailFrom": "'waldo.pouros20@ethereal.email",
+    "emailFrom": "waldo.pouros20@ethereal.email",
     "smtpOptions": {
         "host": "smtp.ethereal.email",
         "port": 587,

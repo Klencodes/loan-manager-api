@@ -22,16 +22,14 @@ const schema = new Schema({
     resetToken: { token: String, expires: Date },
     passwordReset: Date,
     created: { type: Date, default: Date.now },
-    updated: Date,    
+    updated: Date
 });
 
 schema.virtual('isVerified').get(function () {
     return !!(this.verified || this.passwordReset);
 });
 
-schema.set('toJSON', {
-    virtuals: true,
-    versionKey: false,
+schema.set('toJSON', { virtuals: true, versionKey: false,
     transform: function (doc, ret) {
         // remove these props when object is serialized
         delete ret._id;

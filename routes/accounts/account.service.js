@@ -175,16 +175,12 @@ async function create(params) {
     if (await db.Account.findOne({ email: params.email })) {
         throw 'Email "' + params.email + '" is already registered';
     }
-
     const account = new db.Account(params);
     account.verified = Date.now();
-
     // hash password
     account.passwordHash = hash(params.password);
-
     // save account
     await account.save();
-
     return basicDetails(account);
 }
 
