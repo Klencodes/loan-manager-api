@@ -1,13 +1,12 @@
 {
-    "connectionString":"mongodb://localhost:27017/User-Accounts",
+    "connectionString":"mongodb://localhost:27017/loans-manager",
     "secret": "asdfjklgh46321226641fsdklafjasdkljfsklfjd7148924065",
-    "emailFrom": "waldo.pouros20@ethereal.email",
+    "emailFrom": "Shine Tech",
     "smtpOptions": {
-        "host": "smtp.ethereal.email",
-        "port": 587,
+        "host": "smtp.gmail.com",        
         "auth": {
-            "user": "waldo.pouros20@ethereal.email",
-            "pass": "Z5FMDkQEeBxxq5n28N"
+            "user": "getitdone263@gmail.com",
+            "pass": "McBank$$"
         }
     }
 }

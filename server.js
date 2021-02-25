@@ -16,8 +16,10 @@ app.use(cors({
     credentials: true
 }));
 
-// api routes
+/* API ROUTES */
 app.use('/accounts', require('./routes/accounts/account.controller'));
+app.use('/loans', require('./routes/loans/loan.controllers'));
+app.use('/payments', require('./routes/payments/payment.controller'));
 
 // global error handler
 app.use(errorHandler);

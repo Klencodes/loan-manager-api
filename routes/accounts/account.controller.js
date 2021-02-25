@@ -15,11 +15,13 @@ router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
 router.get('/', authorize(Role.Admin), getAll);
-router.get('/users', authorize(Role.Admin), usersOnly);
 router.get('/:id', authorize(), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
 router.delete('/:id', authorize(), _delete);
+router.get('/admins', authorize(Role.Admin), adminLists);
+router.get('/users', authorize(Role.Admin), userLists);
+
 
 module.exports = router;
 
@@ -162,7 +164,7 @@ function getAll(req, res, next) {
     //only admin get all account
     accountService.getAll()
         .then((accounts) => 
-            res.json({ status: 200, count: accounts.length,  message: 'Users returned successfully', accounts}))
+            res.json({ status: 200, count: accounts.length,  message: 'Accounts returned successfully', accounts}))
         .catch(next);
     
 }
@@ -178,11 +180,23 @@ function getById(req, res, next) {
         .catch(next);
 }
 
-function usersOnly(req, res, next) { 
+function adminLists(req, res, next) {
+    //admin get all admin accounts
+    accountService.adminsOnly()
+        .then((admins) => 
+            res.json({ status: 200, count: admins.length,  message: 'Admin Accounts returned successfully', admins})
+        )
+        .catch(next);
+    
+}
+
+function userLists(req, res, next) { 
+    //admin get all user accounts
     accountService.usersOnly()
         .then(users =>
-            res.json({status: 200, count: users.length, users})
-        .catch(next))
+            res.json({ status: 200, count: users.length,  message: 'User Accounts returned successfully', users})
+        )
+        .catch(next)
 }
 
 function _delete(req, res, next) {
