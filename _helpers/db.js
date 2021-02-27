@@ -20,6 +20,6 @@ module.exports = {
     Account: require('../routes/accounts/account.model'),
     RefreshToken: require('../routes/accounts/refresh-token.model'),
     Loan: require('../routes/loans/loan.model'),
-    LoanDocument: require('../routes/loans/document.model'),
+    Document: require('../routes/loans/document.model'),
     Payment: require('../routes/payments/payment.model'),
 };

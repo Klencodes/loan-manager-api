@@ -12,8 +12,6 @@ const schema = new Schema({
   idNumber: { type: String, unique: true, trim: true, required: true },
   created: { type: Date, default: Date.now },
   updated: { type: Date },
-
-
 });
 
 //Customized id to replace default _id parsed to client server
