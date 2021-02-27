@@ -12,6 +12,7 @@ module.exports = router
 /* LOAN ROUTES */
 
 /**
+ * ONLY ADMIN ROUTE
  * GET /loans
  * Purpose: Admin Get all loans and by accountId(userId => req.user.id)
  */
@@ -54,6 +55,7 @@ router.get('/:id', authorize(), (req, res) => {
 })
 
 /**
+ * ONLY ADMIN ROUTE
  * GET /loans/find/:id
  * Purpose: Get specific loan and populate associated user informations
  */
@@ -90,6 +92,7 @@ router.post('/request', authorize(), (req, res) => {
 });
 
 /**
+ * ONLY ADMIN ROUTE
  * PATCH /loans/:id
  * Purpose: Update a specified loan
  * Only admin can Approve loan and Change values
@@ -108,6 +111,7 @@ router.patch('/:id', authorize(Role.Admin), (req, res) => {
 });
 
 /**
+ * ONLY ADMIN ROUTE
  * DELETE /loans/:id
  * Purpose: Delete a loan
  * Only admin can delete a loan
@@ -146,7 +150,7 @@ router.post('/:loanId/documents', authorize(), (req, res) => {
     // We want to create a new document in a loan specified by loanId
 
     db.Loan.findOne({
-        id: req.params.loanId,
+        _id: req.params.loanId,
         accountId: req.user.id
     }).then((loan) => {
         if (loan) {
@@ -154,14 +158,16 @@ router.post('/:loanId/documents', authorize(), (req, res) => {
             // therefore the currently authenticated user can create new tasks
             return true;
         }
+
         // else - the list object is undefined
         return false;
     }).then((canCreateTask) => {
         if (canCreateTask) {
             const { idCard, idNumber } = req.body
             let newDocument = new db.Document({
-                idCard, idNumber,
-                loanId: req.params.loanId
+                loanId: req.params.loanId,
+                idCard, 
+                idNumber,
             });
             newDocument.save().then((newDocument) => {
                 res.send({ status: 200, newDocument });
@@ -212,7 +218,7 @@ router.patch('/:loanId/documents/:docId', authorize(), (req, res) => {
 
 /**
  * DELETE /:loanId/documents/:docId
- * Purpose: Delete a task
+ * Purpose: Delete a document by loanId
  */
 router.delete('/:loanId/documents/:docId', authorize(Role.Admin), (req, res) => {
 
