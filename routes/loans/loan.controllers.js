@@ -179,11 +179,11 @@ router.post('/:loanId/documents', authorize(), (req, res) => {
 })
 
 /**
- * PATCH /:loanId/documents/:id
- * Purpose: Update an existing document
+ * PATCH /:loanId/documents/:docId
+ * Purpose: Get an existing document
  */
-router.patch('/:loanId/documents/:docId', authorize(), (req, res) => {
-    // We want to update an existing document (specified by docId)
+router.get('/:loanId/documents/:docId', authorize(), (req, res) => {
+    // We want to get an existing document (specified by docId)
 
     db.Loan.findOne({
         _id: req.params.loanId,
@@ -191,27 +191,59 @@ router.patch('/:loanId/documents/:docId', authorize(), (req, res) => {
     }).then((loan) => {
         if (loan) {
             // loan object with the specified conditions was found
-            // therefore the currently authenticated user can make updates to document within this loan
+            // therefore the currently authenticated user can get document within this loan
             return true;
         }
-
         // else - the loan object is undefined
         return false;
     }).then((canUpdateDoc) => {
         if (canUpdateDoc) {
-            // the currently authenticated user can update document
-            db.Document.findOneAndUpdate({
+            // the currently authenticated user can get document
+            db.Document.findOne({
                 _id: req.params.docId,
                 loanId: req.params.loanId
-            }, {
-                $set: req.body,
-                updated: Date.now()
-            }
-            ).then((updatedDoc) => {
-                res.send({ status: 200, message: 'Document updated successfully', updatedDoc })
+            }).then((getDoc) => {
+                res.send({ status: 200, message: 'Document found successfully', getDoc })
             })
         } else {
-            res.send({ status: 404, message: "Can't update document" })
+            res.send({ status: 404, message: "Can't find document" })
+        }
+    })
+});
+
+/**
+ * PATCH /:loanId/documents/:docId
+ * Purpose: Update an existing document
+ */
+router.patch('/:loanId/documents/:docId', authorize(), (req, res) => {
+    // We want to update an existing document (specified by docId)
+
+    List.findOne({
+        _id: req.params.listId,
+        _userId: req.user_id
+    }).then((list) => {
+        if (list) {
+            // list object with the specified conditions was found
+            // therefore the currently authenticated user can make updates to tasks within this list
+            return true;
+        }
+
+        // else - the list object is undefined
+        return false;
+    }).then((canUpdateTasks) => {
+        if (canUpdateTasks) {
+            // the currently authenticated user can update tasks
+            Task.findOneAndUpdate({
+                _id: req.params.taskId,
+                _listId: req.params.listId
+            }, {
+                    $set: req.body
+                }
+            ).then(() => {
+                res.send({ message: 'Updated successfully.' })
+            })
+        } else {
+            res.sendStatus(404);
         }
     })
 });
