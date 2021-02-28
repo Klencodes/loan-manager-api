@@ -218,11 +218,11 @@ router.get('/:loanId/documents/:docId', authorize(), (req, res) => {
 router.patch('/:loanId/documents/:docId', authorize(), (req, res) => {
     // We want to update an existing document (specified by docId)
 
-    List.findOne({
-        _id: req.params.listId,
-        _userId: req.user_id
-    }).then((list) => {
-        if (list) {
+    db.Loan.findOne({
+        _id: req.params.loanId,
+        accountId: req.user.id
+    }).then((loan) => {
+        if (loan) {
             // list object with the specified conditions was found
             // therefore the currently authenticated user can make updates to tasks within this list
             return true;
@@ -230,20 +230,21 @@ router.patch('/:loanId/documents/:docId', authorize(), (req, res) => {
 
         // else - the list object is undefined
         return false;
-    }).then((canUpdateTasks) => {
-        if (canUpdateTasks) {
+    }).then((canUpdateDoc) => {
+        if (canUpdateDoc) {
             // the currently authenticated user can update tasks
-            Task.findOneAndUpdate({
-                _id: req.params.taskId,
-                _listId: req.params.listId
+            db.Document.findOneAndUpdate({
+                _id: req.params.docId,
+                loanId: req.params.loanId
             }, {
-                    $set: req.body
+                    $set: req.body,
+                    updated: Date.now()
                 }
-            ).then(() => {
-                res.send({ message: 'Updated successfully.' })
+            ).then((updatedDoc) => {
+                res.send({ status: 200, message: 'Document Updated successfully.', updatedDoc })
             })
         } else {
-            res.sendStatus(404);
+            res.send({status: 404, message:"Can't update document"});
         }
     })
 });
