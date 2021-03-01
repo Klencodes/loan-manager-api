@@ -9,9 +9,8 @@ const schema = new Schema({
   idCard: { type: String, required: true, trim: true },
   idNumber: { type: String, unique: true, trim: true, required: true },
   created: { type: Date, default: Date.now },
-  updated: { type: Date },
+  updated: { type: Date, default: Date.now  },
   // docFile: { type: File, required: true, trim: true },
-
 });
 
 //Customized id to replace default _id parsed to client server
