@@ -28,7 +28,7 @@ router.get('/find-all', authorize(Role.Admin), (req, res) => {
  * GET /loans/find/:id
  * Purpose: Get specific loan and populate associated user informations
  */
-router.get('/find/:loanId', authorize(Role.Admin), (req, res) => {
+router.get('/find/:loanId',  authorize(Role.Admin), (req, res) => {
     // We want to return an array of all the loans that belong to a user 
     db.Loan.findOne({
         _id: req.params.loanId

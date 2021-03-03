@@ -125,12 +125,42 @@ router.get('/', authorize(), (req, res) => {
     });
 });
 
+/**
+ * GET /:loanId/payments
+ * Purpose: Get all payments in a specific loan
+ */
+router.get('/:loanId/loan-payments', authorize(), (req, res) => {
+    // We want to return all payments that belong to a specific loan (specified by loanId)
+    db.Loan.findOne({
+        _id: req.params.loanId,
+        accountId: req.user.id
+    }).then((loan) => {
+        if (loan) {
+            // loan object with the specified conditions was found
+            // therefore the currently authenticated user can get payment within this loan
+            return true;
+        }
+        // else - the loan object is undefined
+        return false;
+    }).then((canGetPaymnent) => {
+        if (canGetPaymnent) {
+            // the currently authenticated user can get document
+            db.Payment.find({
+                loanId: req.params.loanId
+            }).populate('loanId').then((payments) => {
+                res.send({ status: 200, count: payments.length, message: 'Payment returned successfully', payments })
+            })
+        } else {
+            res.send({ status: 404, message: "Can't find Payment" })
+        }
+    })
+});
 
 /**
  * GET /:loanId/get-payment/:id
  * Purpose: Get an existing payment
  */
-router.get('/:loanId/payment/:id', authorize(), (req, res) => {
+router.get('/:loanId/loan-payments/:id', authorize(), (req, res) => {
     // We want to get an existing document (specified by docId)
 
     db.Loan.findOne({
