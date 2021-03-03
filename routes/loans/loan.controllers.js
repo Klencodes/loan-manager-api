@@ -3,8 +3,7 @@ const authorize = require('../../middleware/authorize');
 const router = express.Router();
 const db = require('../../_helpers/db');
 const Role = require('../../_helpers/role');
-const Status = require('../../_helpers/status');
-
+const Status = require('./status');
 
 module.exports = router;
 
@@ -19,7 +18,7 @@ router.get('/find-all', authorize(Role.Admin), (req, res) => {
     // We want to return an array of all the loans that belong to the authenticated user 
     db.Loan.find({
     }).populate('accountId').then((loans) => {
-        res.send({ status: 200, totalLoans: loans.length, loans });
+        res.send({ status: 200,  message: "Loans returned successfully", totalLoans: loans.length, loans });
     }).catch((e) => {
         res.send(e);
     });
@@ -34,7 +33,7 @@ router.get('/find/:loanId', authorize(Role.Admin), (req, res) => {
     db.Loan.findOne({
         _id: req.params.loanId
     }).populate('accountId').then((loans) => {
-        res.send({ status: 200, count: loans.length, loans });
+        res.send({ status: 200, message: "Loan returned successfully",  count: loans.length, loans });
     }).catch((e) => {
         res.send(e);
     });
@@ -132,7 +131,7 @@ router.get('/:loanId/get-document/:docId', authorize(Role.Admin), (req, res) => 
                 _id: req.params.docId,
                 loanId: req.params.loanId
             }).then((getDoc) => {
-                res.send({ status: 200, message: 'Document found successfully', getDoc })
+                res.send({ status: 200, message: "Document returned successfully",  getDoc })
             })
         } else {
             res.send({ status: 404, message: "Can't find document" })
@@ -246,14 +245,14 @@ router.get('/', authorize(), (req, res) => {
     db.Loan.find({
         accountId: req.user.id,
     }).then((loans) => {
-        res.send({ status: 200, count: loans.length, loans });
+        res.send({ status: 200, message: "Loans returned successfully",  count: loans.length, loans });
     }).catch((e) => {
         res.send(e);
     });
 });
 
 /**
- * GET /loans
+ * GET /loan
  * Purpose: Authorized user get a loan
  */
 router.get('/:loanId', authorize(), (req, res) => {
@@ -261,8 +260,8 @@ router.get('/:loanId', authorize(), (req, res) => {
     db.Loan.findOne({
         accountId: req.user.id,
         _id: req.params.loanId
-    }).then((loans) => {
-        res.send({ status: 200, count: loans.length, loans });
+    }).then((loan) => {
+        res.send({ status: 200, count: loan.length, loan });
     }).catch((e) => {
         res.send(e);
     });
@@ -315,7 +314,7 @@ router.get('/:loanId/documents', authorize(), (req, res) => {
     db.Document.find({
         loanId: req.params.loanId
     }).populate('loanId').then((documents) => {
-        res.send({ status: 200, count: documents.length, documents });
+        res.send({ status: 200, message: "Documents returned successfully", count: documents.length, documents });
     })
 });
 
@@ -345,7 +344,7 @@ router.get('/:loanId/documents/:docId', authorize(), (req, res) => {
                 _id: req.params.docId,
                 loanId: req.params.loanId
             }).then((getDoc) => {
-                res.send({ status: 200, message: 'Document found successfully', getDoc })
+                res.send({ status: 200, message: 'Document returned successfully', getDoc })
             })
         } else {
             res.send({ status: 404, message: "Can't find document" })

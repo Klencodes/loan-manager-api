@@ -11,7 +11,7 @@ const schema = new Schema({
   loanAmount: { type: Number, required: true, trim: true },
   created: { type: Date, default: Date.now },
   loanStatus: { type: String, required: true, trim: true },
-  statusDate: { type: Date, default: Date.now }
+  statusDate: { type: Date, default: Date.now },
 });
 //Customized id to replace default _id parsed to client server
 schema.method("toJSON", function () {

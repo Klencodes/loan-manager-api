@@ -10,7 +10,7 @@ const schema = new Schema({
   idNumber: { type: String, unique: true, trim: true, required: true },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now  },
-  // docFile: { type: File, required: true, trim: true },
+  // docFile: [{ type: String, required: true, trim: true }],
 });
 
 //Customized id to replace default _id parsed to client server
