@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'https://loan-backend-api.herokuapp.com',
+    origin: 'https://loansmanager.herokuapp.com',
     methods: ['GET', 'PUT', 'DELETE', 'PATCH', 'POST', 'OPTIONS'],
     allowedHeaders: 'Content-Type, Authorization, XMLHttpRequest, Origin, X-Requested-With, Accept',
     credentials: true
