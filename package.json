@@ -3,10 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": ""
-    },
+    
     "scripts": {
         "start": "nodemon ./server.js",
         "start:dev": "nodemon ./server.js"
