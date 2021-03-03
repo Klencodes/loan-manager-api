@@ -9,12 +9,16 @@ const errorHandler = require('./middleware/error-haddler');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors({
-    origin: 'http://localhost:4200',
-    methods: ['GET', 'PUT', 'DELETE', 'PATCH', 'POST', 'OPTIONS'],
-    allowedHeaders: 'Content-Type, Authorization, XMLHttpRequest, Origin, X-Requested-With, Accept',
-    credentials: true
-}));
+
+// CORS HEADERS MIDDLEWARE
+app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
+
+// app.use(cors({
+//     origin: 'http://localhost:4200',
+//     methods: ['GET', 'PUT', 'DELETE', 'PATCH', 'POST', 'OPTIONS'],
+//     allowedHeaders: 'Content-Type, Authorization, XMLHttpRequest, Origin, X-Requested-With, Accept',
+//     credentials: true
+// }));
 
 /* API ROUTES */
 app.use('/accounts', require('./routes/accounts/account.controller'));
