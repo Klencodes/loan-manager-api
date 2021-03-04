@@ -32,7 +32,7 @@ app.use('/payments', require('./routes/payments/payment.controller'));
 
 /* Search Existing Customers */
 app.get('/', function (req, res, next) {
-    res.send('respond with a resource OK');
+    res.send('YOU ARE GOOD TO GO!!!');
   });
 // global error handler
 app.use(errorHandler);
