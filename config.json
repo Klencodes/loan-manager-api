@@ -1,5 +1,5 @@
 {
-    "connectionString":"mongodb://localhost:27017/loans-manager",
+    "connectionString":"mongodb+srv://shine:McBank$$@cluster0.bugdr.mongodb.net/loanManager?retryWrites=true&w=majority",
     "secret": "asdfjklgh46321226641fsdklafjasdkljfsklfjd7148924065",
     "emailFrom": "Shine Tech",
     "smtpOptions": {
