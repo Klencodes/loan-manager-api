@@ -11,7 +11,12 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 // CORS HEADERS MIDDLEWARE
-app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
+app.use(cors({ 
+  origin: (origin, callback) => callback(null, true),
+  methods: ['GET', 'PUT', 'DELETE', 'PATCH', 'POST', 'OPTIONS'],
+  allowedHeaders: 'Content-Type, Authorization, XMLHttpRequest, Origin, X-Requested-With, Accept',
+  credentials: true 
+}));
 
 // app.use(cors({
 //     origin: 'http://localhost:4200',
