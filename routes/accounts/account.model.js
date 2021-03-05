@@ -6,6 +6,8 @@ const schema = new Schema({
     passwordHash: { type: String, required: true },
     phoneNumber:  { type: String, required: true },
     title: { type: String, required: true },
+    facebook:  String,
+    linkedin:  String, 
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     jobTitle: { type: String, required: true },
