@@ -12,62 +12,72 @@ module.exports = router;
  * STARTS ADMIN ROUTES (Restricted to only Admin)
 /**
 
- * GET /payments
+ * GET /payments/all-payments
  * Purpose: Admin Get all payments and by accountId(userId => req.user.id)
  */
-router.get('/find-all', authorize(Role.Admin), (req, res) => {
+router.get('/all-payments', authorize(Role.Admin), (req, res) => {
     // We want to return an array of all the payments in the database 
     db.Payment.find({
     }).populate('accountId').populate('loanId').then((payments) => {
-        res.send({ status: 200,  message: "payments returned successfully", totalPayments: payments.length, payments });
+        res.send({ status: 200,  message: "Payments returned successfully", totalPayments: payments.length, payments });
     }).catch((e) => {
         res.send(e);
     });
 })
-
- /**
- * PATCH /:loanId/confirm-payment/:id
- * Purpose: Confirm payment made by user
- */
-
-router.patch('/:loanId/confirm-payment/:id', authorize(Role.Admin), (req, res) => {
-    // We want to Confirm payment(specified by payment id)
-
-    db.Loan.findOne({
-        _id: req.params.loanId,
-    }).then((loan) => {
-        if (loan) {
-            // list object with the specified conditions was found
-            // therefore the currently authenticated user can make updates to tasks within this list
-            return true;
-        }
-        // else - the list object is undefined
-        return false;
-    }).then((canConfirmPayment) => {
-        if (canConfirmPayment) {
-            // the currently authenticated user can update tasks
-            db.Payment.findOneAndUpdate({
-                _id: req.params.id,
-                loanId: req.params.loanId
-            }, {
-                    $set: req.body,
-                    paymentStatusDate: Date.now()
-                }
-            ).then((confirmedPayment) => {
-                res.send({ status: 200, message: 'Payment Confirmed.', confirmedPayment })
-            })
-        } else {
-            res.send({status: 404, message:"Can't confirm payment"});
-        }
-    })
-});
  
+/**
+ * GET /payments/find-payments/:id
+ * Purpose: Authorized user get all payments requested
+ */
+router.get('/find-payments/:id', authorize(Role.Admin), (req, res) => {
+    // We want to return an array of all the payments that belong to the authenticated user 
+    db.Payment.findOne({
+        _id: req.params.id
+    }).populate('loanId').populate('accountId').then((payment) => {
+        res.send({ status: 200, message: "Payment returned successfully",  payment });
+    }).catch((e) => {
+        res.send(e);
+    });
+});
+
+/* POST /payments
+ * Purpose: Confirm payments
+ */
+router.patch('/:id', authorize(Role.Admin), (req, res) => {
+    // confirm payment user made by user 
+    db.Payment.findOneAndUpdate({
+        _id: req.params.id
+    }, {
+        $set: req.body,
+        paymentStatusDate: Date.now()
+    }).then((payment) => {
+        res.send({ status: 200, message: "Payment confirmed successfully", payment });
+    }).catch((e) => {
+        res.send(e);
+    });
+});
+
 
 /**
  * STARTS
  * AUTHENTICED USER ROUTES (ADMINS AND USERS)
+ */ 
 /**
- 
+ * POST /payments
+ * Purpose: All users get all payments
+ */
+router.get('/', authorize(), (req, res) => {
+    // We want to return an array of all the payments that belong to the authenticated user 
+    db.Payment.find({
+        accountId: req.user.id,
+    }).populate('loanId').then((payments) => {
+        res.send({ status: 200, message: "Payments returned successfully",  count: payments.length, payments });
+    }).catch((e) => {
+        res.send(e);
+    });
+});
+
+/**
  * POST /payments
  * Purpose: All users can make payment
  */
@@ -99,7 +109,6 @@ router.post('/:loanId', authorize(), (req, res) => {
                 paymentType, 
                 paymentAccount,
                 paymentStatus: status.Pending,
-                paymentStatusDate,
             });
             payment.save().then((paymentDoc) => {
                 res.send({ status: 200, message: "Payment made successfully waiting for comfirmation", paymentDoc });
@@ -108,21 +117,6 @@ router.post('/:loanId', authorize(), (req, res) => {
             res.send({ status: 404, message: "Unable to make payment" });
         }
     })
-});
-
-/**
- * GET /payments
- * Purpose: Authorized user get all payments requested
- */
-router.get('/', authorize(), (req, res) => {
-    // We want to return an array of all the payments that belong to the authenticated user 
-    db.Payment.find({
-        accountId: req.user.id,
-    }).populate('loanId').then((payments) => {
-        res.send({ status: 200, message: "Payments returned successfully",  count: payments.length, payments });
-    }).catch((e) => {
-        res.send(e);
-    });
 });
 
 /**

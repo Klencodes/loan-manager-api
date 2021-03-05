@@ -14,7 +14,7 @@ module.exports = router;
  * GET /loans
  * Purpose: Admin Get all loans and by accountId(userId => req.user.id)
  */
-router.get('/find-all', authorize(Role.Admin), (req, res) => {
+router.get('/all-loans', authorize(Role.Admin), (req, res) => {
     // We want to return an array of all the loans that belong to the authenticated user 
     db.Loan.find({
     }).populate('accountId').then((loans) => {
@@ -28,11 +28,11 @@ router.get('/find-all', authorize(Role.Admin), (req, res) => {
  * GET /loans/find/:id
  * Purpose: Get specific loan and populate associated user informations
  */
-router.get('/find/:loanId',  authorize(Role.Admin), (req, res) => {
+router.get('/find-loan/:loanId',  authorize(Role.Admin), (req, res) => {
     // We want to return an array of all the loans that belong to a user 
     db.Loan.findOne({
         _id: req.params.loanId
-    }).populate('accountId').then((loans) => {
+    }).populate('accountId').populate().then((loans) => {
         res.send({ status: 200, message: "Loan returned successfully",  count: loans.length, loans });
     }).catch((e) => {
         res.send(e);
