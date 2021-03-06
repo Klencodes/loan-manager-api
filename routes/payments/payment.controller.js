@@ -99,7 +99,7 @@ router.post('/:loanId', authorize(), (req, res) => {
     }).then((canMakePayemnt) => {
         if (canMakePayemnt) {
             
-            const { amountPaid, transaction, paymentType, paymentAccount, paymentStatusDate } = req.body
+            const { amountPaid, transaction, paymentType, paymentAccount } = req.body
 
             let payment = new db.Payment({
                 accountId: req.user.id, //account id from account collection referenced in payment.model.js
